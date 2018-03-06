@@ -1,0 +1,82 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,positioning,chains,calc}
+
+\begin{document}
+
+\tikzset{
+    node/.style={           % "regular" text node
+        rectangle,
+        draw,
+        text width=5em,
+        text centered,
+        %rounded corners
+    },
+    controlflow/.style={    % control flow (rectangle w/ rounded corners)
+        node,
+        rounded corners
+    },
+    io/.style={             % input/output (parallelogram-shape)
+        trapezium,
+        draw,
+        text width=5em,
+        %minimum width=3cm,
+        trapezium left angle=75,
+        trapezium right angle=105
+    },
+    condition/.style={      % diamond shaped condition node
+        diamond,
+        draw,
+        aspect=2,
+        text width=4em,
+        text badly centered,
+        inner sep=0pt
+    },
+    desc/.style={           % yes/no path annotations
+        fill=white,
+        inner sep=2.5pt
+    },
+    connector/.style={      % path connectors
+        -latex,
+        font=\scriptsize
+    }
+}
+
+\begin{tikzpicture}
+    \matrix (m)[matrix of nodes, column  sep=2cm,row  sep=8mm, align=center, nodes={rectangle,draw, anchor=center} ]{
+                                & |[controlflow]| {start}   &                           \\
+                                & |[node]| {$a = 0$}        &                           \\
+                                & |[condition]| {$a == 0$}  &                           \\
+        |[io]| {$b = read()$}   &                           & |[io]| {$a = read()$}     \\
+        |[condition]| {$b > a$} &                           &                           \\
+                                & |[condition]| {$b > a$}   &                           \\
+        |[io]| {$write(a)$}     &                           & |[io]| {$write(b)$}       \\
+                                &                           & |[node]| {$b = b - a$}    \\
+        |[controlflow]| {end}   &                           &                           \\
+    };
+    
+    \draw[connector] (m-1-2) -- (m-2-2);
+    \draw[connector] (m-2-2) -- coordinate[midway](m) (m-3-2);
+    
+    
+    \draw [connector] (m-3-2) -| node[desc, pos=0.25] {yes} (m-4-3);
+    \draw [connector] (m-3-2) -| node[desc, pos=0.25] {no}  (m-4-1);
+    %\draw[connector] (m-4-3.east) -| +(.5,0) |- (m); % edge starts at the right side of the node
+    \draw[connector] (m-4-3.south) -| +(0,-.5) -- +(1.5,-.5) |- (m); % edge starts at the bottom of the node
+    
+    
+    \draw[connector] (m-4-1) -- (m-5-1);
+    \draw[connector] (m-5-1) -| node[desc, pos=0.25] {yes} (m-6-2);
+    \draw[connector] (m-5-1) -| node[desc, pos=0.25] {no} +(-2,0) |- (m-9-1.west);
+    
+    \draw[connector] (m-6-2) -| node[desc, pos=0.25] {yes} (m-7-3);
+    \draw[connector] (m-7-3) -- (m-8-3);
+    \draw[connector] (m-8-3.south) -| +(0, -.5) -- +(1.5, -.5) |- ($ (m-6-2.north) + (0,.5) $);
+    
+    \draw[connector] (m-6-2) -| node[desc, pos=0.25] {no} (m-7-1);
+    
+    \draw[connector] (m-7-1) -- (m-9-1);
+\end{tikzpicture}
+
+\end{document}

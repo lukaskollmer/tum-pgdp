@@ -1,0 +1,30 @@
+LDI 3528
+LDI 3780
+LDI ggt
+CALL 2
+HALT
+
+; a bei -1, b bei 0
+ggt:
+ALLOC 1
+LDS -1
+LDS 0
+JLT loop
+LDS 0
+LDS -1
+STS 0
+STS -1
+loop:
+LDS 0
+STS 1
+LDS 0
+LDS -1
+MOD
+STS 0
+LDS 1
+STS -1
+LDS 0
+LDI 0
+JNE loop
+LDS -1
+RETURN 3

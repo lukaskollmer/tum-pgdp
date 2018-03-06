@@ -1,0 +1,61 @@
+class Counter {
+    int count;
+
+    Counter() {
+        count = 0;
+    }
+
+    int increment() {
+        count = count + 1;
+
+        return this;
+    }
+
+    int getCount() {
+        return count;
+    }
+}
+
+
+class FancyCounter extends Counter {
+    int step;
+
+    FancyCounter(int pStep) {
+        super.Counter();
+        step = pStep;
+    }
+
+    int increment() {
+        int c;
+        c = 0;
+
+        while (c < step) {
+            super.increment();
+            c = c + 1;
+        }
+
+        return this;
+    }
+}
+
+
+int main() {
+    FancyCounter counter;
+
+    int[] a;
+
+    a = new int[12];
+
+
+    a[2] = 5;
+    a = a[5];
+
+
+    counter = new FancyCounter(2);
+
+    counter.increment();
+    counter.increment();
+    counter.increment();
+
+    return counter.getCount();
+}
